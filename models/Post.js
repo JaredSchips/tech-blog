@@ -45,7 +45,7 @@ Post.init(
     sequelize,
     timestamps: false,
     underscored: true,
-    modelname: 'post'
+    modelName: 'post'
   }
 )
 
