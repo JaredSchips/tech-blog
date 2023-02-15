@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { User } = require('../../models')
+const { User, Post } = require('../../models')
 
 // CREATE new user
 router.post('/', async (req, res) => {
@@ -12,6 +12,7 @@ router.post('/', async (req, res) => {
 
     req.session.save(() => {
       req.session.loggedIn = true
+      req.session.user = dbUserData
 
       res.status(200).json(dbUserData)
     })
@@ -44,6 +45,7 @@ router.post('/login', async (req, res) => {
 
     req.session.save(() => {
       req.session.loggedIn = true
+      req.session.user = dbUserData
 
       res.status(200)
         .json({ user: dbUserData, message: 'You are now logged in!' })
@@ -62,6 +64,28 @@ router.post('/logout', (req, res) => {
     })
   } else {
     res.status(404).end()
+  }
+})
+
+// GET all posts by a user
+router.get('/:id/posts', async (req, res) => {
+  try {
+    if (req.params.id == 0 && !req.session.loggedIn) {
+      res.status(400).json({ message: 'Not logged in' })
+      return
+    }
+
+    const id = (req.params.id == 0) ? req.session.user.id : req.params.id
+    const posts = await Post.findAll({
+      where: { user_id: id },
+      order: [['date_created', 'DESC']],
+      limit: 15
+    })
+
+    res.json(posts)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json(err)
   }
 })
 
