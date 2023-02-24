@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const { Post, User, Comment } = require('../models')
 
 // Homepage
 router.get('/', async (req, res) => {
@@ -23,6 +24,35 @@ router.get('/dashboard', async (req, res) => {
     })
   }
   catch (err) {
+    console.log(err)
+    res.status(500).json(err)
+  }
+})
+
+router.get('/posts/:id/edit', async (req, res) => {
+  try {
+    const post = await Post.findByPk(req.params.id, {
+      include: [
+        { model: User, attributes: { exclude: 'password' } },
+        { model: Comment },
+      ],
+    })
+
+    if (!post) {
+      res.redirect('/')
+      return
+    }
+
+    if (!(req.session.loggedIn && req.session.user.id === post.user.id)) {
+      res.redirect('/')
+      return
+    }
+
+    res.render('editor', {
+      loggedIn: req.session.loggedIn,
+      post: post.dataValues
+    })
+  } catch (err) {
     console.log(err)
     res.status(500).json(err)
   }
