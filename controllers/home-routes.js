@@ -58,6 +58,18 @@ router.get('/posts/:id/edit', async (req, res) => {
   }
 })
 
+router.get('/post/:id', (req, res) => {
+  try {
+    res.render('viewer', {
+      loggedIn: req.session.loggedIn,
+      postId: req.params.id
+    })
+  } catch (err) {
+    console.log(err)
+    res.status(err)
+  }
+})
+
 // Login
 router.get('/login', (req, res) => {
   if (req.session.loggedIn) {
