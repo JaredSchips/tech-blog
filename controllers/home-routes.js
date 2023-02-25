@@ -70,6 +70,20 @@ router.get('/post/:id', (req, res) => {
   }
 })
 
+router.get('/new-post', (req, res) => {
+  try {
+    if (!req.session.loggedIn) res.redirect('/')
+
+    res.render('poster', {
+      loggedIn: req.session.loggedIn,
+      user: req.session.user
+    })
+  } catch (err) {
+    console.log(err)
+    res.status(500).json(err)
+  }
+})
+
 // Login
 router.get('/login', (req, res) => {
   if (req.session.loggedIn) {
