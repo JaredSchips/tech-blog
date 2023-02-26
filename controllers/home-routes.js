@@ -62,6 +62,7 @@ router.get('/post/:id', (req, res) => {
   try {
     res.render('viewer', {
       loggedIn: req.session.loggedIn,
+      user: req.session.user,
       postId: req.params.id
     })
   } catch (err) {

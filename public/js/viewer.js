@@ -39,4 +39,24 @@ const createCommentCard = (comment) => {
   return commentCard
 }
 
+const createComment = async () => {
+  await fetch('/api/comments', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      content: document.getElementById('content-form').value,
+      user_id: userId,
+      post_id: postId
+    })
+  })
+  document.location.reload()
+  document.getElementById('content-form').value = ''
+}
+
+if (document.getElementById('submit-button')) {
+  document.getElementById('submit-button').addEventListener('click', createComment)
+}
+
 populateAll()
