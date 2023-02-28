@@ -5,7 +5,8 @@ const { Post, User, Comment } = require('../models')
 router.get('/', async (req, res) => {
   try {
     res.render('homepage', {
-      loggedIn: req.session.loggedIn
+      loggedIn: req.session.loggedIn,
+      user: req.session.user,
     })
   }
   catch (err) {
@@ -20,7 +21,8 @@ router.get('/dashboard', async (req, res) => {
     if (!req.session.loggedIn) res.redirect('/')
 
     res.render('dashboard', {
-      loggedIn: req.session.loggedIn
+      loggedIn: req.session.loggedIn,
+      user: req.session.user,
     })
   }
   catch (err) {
@@ -50,6 +52,7 @@ router.get('/posts/:id/edit', async (req, res) => {
 
     res.render('editor', {
       loggedIn: req.session.loggedIn,
+      user: req.session.user,
       post: post.dataValues
     })
   } catch (err) {
